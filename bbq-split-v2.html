@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>BBQ Split 🔥</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+/* ===== THEME VARS ===== */
+:root {
+  --bg:#0f0d0b; --bg2:#181410; --bg3:#211c17; --bg4:#2a231c;
+  --surface:#1e1813; --surface2:#272018; --surface3:#302820;
+  --border:rgba(255,150,50,0.11); --border2:rgba(255,150,50,0.22); --border3:rgba(255,150,50,0.35);
+  --ember:#ff6b2b; --ember2:#ff9454; --gold:#ffb347; --gold2:#ffd580;
+  --ash:#a89880; --ash2:#c8b49a;
+  --text:#f0e8dc; --text2:#c8b49a; --text3:#8a7a68; --text4:#5a4e42;
+  --red:#ff5252; --green:#4caf7d; --blue:#5b8fff; --purple:#a78bfa;
+  --shadow:0 8px 40px rgba(0,0,0,0.6);
+  --r:12px; --r-sm:8px; --r-lg:18px; --r-xl:24px;
+}
+[data-theme="light"] {
+  --bg:#faf8f4; --bg2:#f3ede4; --bg3:#ece4d8; --bg4:#e0d5c5;
+  --surface:#fff; --surface2:#faf8f4; --surface3:#f3ede4;
+  --border:rgba(180,130,80,0.15); --border2:rgba(180,130,80,0.28); --border3:rgba(180,130,80,0.45);
+  --ash:#8a7058; --ash2:#6a5040;
+  --text:#2a1f12; --text2:#5a4030; --text3:#9a8060; --text4:#c0a880;
+  --shadow:0 8px 40px rgba(0,0,0,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-thumb{background:var(--border3);border-radius:3px}
+
+#root{min-height:100vh}
+.app{max-width:540px;margin:0 auto;padding-bottom:90px;position:relative}
+@media(min-width:960px){.app{max-width:980px}}
+
+.ambient{position:fixed;top:0;left:0;right:0;height:350px;background:radial-gradient(ellipse 90% 55% at 50% -5%,rgba(255,107,43,.16) 0%,transparent 70%);pointer-events:none;z-index:0;transition:opacity .5s}
+[data-theme="light"] .ambient{background:radial-gradient(ellipse 90% 55% at 50% -5%,rgba(255,107,43,.08) 0%,transparent 70%)}
+
+.header{padding:18px 16px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(15,13,11,.95);backdrop-filter:blur(16px);z-index:50;transition:background .3s}
+[data-theme="light"] .header{background:rgba(250,248,244,.95)}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--ember),var(--gold));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.logo-text{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;letter-spacing:-.5px;color:var(--text)}
+.logo-text em{color:var(--ember);font-style:normal}
+.hdr-actions{display:flex;align-items:center;gap:8px}
+.icon-btn{width:34px;height:34px;border-radius:9px;background:var(--surface2);border:1px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .2s;color:var(--text2)}
+.icon-btn:hover{background:var(--bg3);border-color:var(--border3)}
+.notif-dot{position:relative}
+.notif-dot::after{content:attr(data-count);position:absolute;top:-4px;right:-4px;background:var(--ember);color:#fff;font-size:9px;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px;font-family:'Syne',sans-serif}
+
+.room-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;position:relative;z-index:1}
+.room-card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-xl);padding:32px 28px;width:100%;max-width:420px;animation:fadeUp .4s ease}
+.room-logo{font-size:48px;margin-bottom:12px}
+.room-title{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;margin-bottom:6px}
+.room-title em{color:var(--ember);font-style:normal}
+.room-sub{font-size:14px;color:var(--text3);margin-bottom:28px;line-height:1.6}
+.room-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--text4);font-size:12px}
+.room-divider::before,.room-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.join-form{display:flex;flex-direction:column;gap:10px}
+
+.inp{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:11px 14px;outline:none;transition:border-color .2s}
+.inp:focus{border-color:var(--ember)}
+.inp::placeholder{color:var(--text4)}
+.inp-group{display:flex;gap:8px}
+.inp-group .inp{flex:1}
+select.inp option{background:var(--bg3)}
+.field{margin-bottom:13px}
+.field-label{font-size:11px;color:var(--text3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.6px;display:block}
+.field-hint{font-size:11px;color:var(--text4);margin-top:4px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border-radius:var(--r-sm);font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .18s;font-family:'DM Sans',sans-serif;letter-spacing:.1px}
+.btn-primary{background:var(--ember);color:#fff}
+.btn-primary:hover{background:var(--ember2);transform:translateY(-1px)}
+.btn-primary:active{transform:scale(.98)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2)}
+.btn-ghost:hover{background:var(--surface2)}
+.btn-danger{background:rgba(255,82,82,.1);color:var(--red);border:1px solid rgba(255,82,82,.22)}
+.btn-success{background:rgba(76,175,125,.1);color:var(--green);border:1px solid rgba(76,175,125,.22)}
+.btn-gold{background:rgba(255,179,71,.12);color:var(--gold);border:1px solid rgba(255,179,71,.28)}
+.btn-full{width:100%}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-xs{padding:3px 9px;font-size:11px;border-radius:6px}
+.btn-fab{position:fixed;bottom:22px;right:18px;width:54px;height:54px;border-radius:16px;background:var(--ember);color:#fff;font-size:26px;box-shadow:0 4px 24px rgba(255,107,43,.5);z-index:100;cursor:pointer;border:none;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.btn-fab:hover{background:var(--ember2);transform:translateY(-2px);box-shadow:0 6px 30px rgba(255,107,43,.6)}
+.btn-fab:active{transform:scale(.95)}
+
+.tabs{display:flex;gap:3px;padding:10px 12px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border);position:sticky;top:57px;background:rgba(15,13,11,.95);backdrop-filter:blur(16px);z-index:40;transition:background .3s}
+[data-theme="light"] .tabs{background:rgba(250,248,244,.95)}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all .2s;color:var(--text3);background:transparent;white-space:nowrap}
+.tab.active{background:var(--surface3);border-color:var(--border2);color:var(--ember)}
+.tab:hover:not(.active){background:var(--surface);color:var(--text2)}
+.tab-badge{display:inline-block;background:var(--ember);color:#fff;font-size:9px;font-weight:700;min-width:14px;height:14px;border-radius:7px;text-align:center;line-height:14px;padding:0 3px;margin-left:4px}
+
+.section{padding:16px 14px}
+.section-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;transition:border-color .2s}
+.card:hover{border-color:var(--border2)}
+.card+.card{margin-top:8px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.card-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text2)}
+
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 14px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:11px 10px;text-align:center}
+.stat-val{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--ember2)}
+.stat-lbl{font-size:9px;color:var(--text4);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+
+.event-hero{padding:16px 14px 12px;border-bottom:1px solid var(--border)}
+.event-name{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;line-height:1.1;margin-bottom:6px}
+.event-name em{color:var(--ember);font-style:normal}
+.crew-row{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-top:8px}
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 9px 4px 5px;font-size:12px;transition:border-color .2s}
+.chip:hover{border-color:var(--border2)}
+.chip-del{background:none;border:none;color:var(--text4);cursor:pointer;font-size:13px;line-height:1;padding:0 2px;transition:color .2s}
+.chip-del:hover{color:var(--red)}
+
+.av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.av-md{width:36px;height:36px;font-size:14px}
+.av-lg{width:44px;height:44px;font-size:17px}
+
+.exp-row{display:flex;align-items:center;gap:11px;padding:13px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:7px;transition:all .2s;animation:fadeUp .3s ease}
+.exp-row:hover{border-color:var(--border2)}
+.exp-cat{font-size:18px;flex-shrink:0}
+.exp-info{flex:1;min-width:0}
+.exp-desc{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.exp-meta{font-size:11px;color:var(--text3);margin-top:1px}
+.exp-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.exp-amt{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--ember2);white-space:nowrap}
+.exp-actions{display:flex;gap:5px}
+.cat-tag{font-size:10px;padding:2px 7px;border-radius:10px;border:1px solid;white-space:nowrap}
+
+.settle-row{display:flex;align-items:center;gap:10px;padding:12px 13px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);margin-bottom:6px;transition:all .2s;animation:fadeUp .3s ease}
+.settle-from{font-size:12px;font-weight:500;flex:1;min-width:0}
+.settle-arrow{color:var(--ember);font-size:16px;flex-shrink:0}
+.settle-to{font-size:12px;font-weight:500;flex:1;min-width:0;text-align:right}
+.settle-amt{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--gold);white-space:nowrap;margin:0 8px}
+
+.timeline{position:relative;padding-left:24px}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:1px;background:var(--border2)}
+.tl-item{position:relative;margin-bottom:14px;animation:fadeUp .3s ease}
+.tl-dot{position:absolute;left:-20px;top:10px;width:9px;height:9px;border-radius:50%;background:var(--ember);border:2px solid var(--bg);flex-shrink:0}
+.tl-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 12px}
+.tl-time{font-size:10px;color:var(--text4);margin-bottom:3px}
+.tl-title{font-size:13px;font-weight:500}
+.tl-sub{font-size:11px;color:var(--text3);margin-top:2px}
+
+.ai-panel{display:flex;flex-direction:column;height:calc(100vh - 120px);max-height:700px}
+.ai-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.ai-msg{display:flex;gap:9px;animation:fadeUp .3s ease}
+.ai-msg.user{flex-direction:row-reverse}
+.ai-bubble{max-width:82%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.55}
+.ai-bubble.bot{background:var(--surface2);border:1px solid var(--border);border-radius:14px 14px 14px 3px;color:var(--text)}
+.ai-bubble.user{background:var(--ember);color:#fff;border-radius:14px 14px 3px 14px}
+.ai-bubble.thinking{color:var(--text3)}
+.ai-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--ember),var(--gold));display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;align-self:flex-end}
+.ai-footer{padding:10px 12px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end}
+.ai-input{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 13px;outline:none;resize:none;min-height:40px;max-height:120px;transition:border-color .2s;line-height:1.5}
+.ai-input:focus{border-color:var(--ember)}
+.ai-input::placeholder{color:var(--text4)}
+.ai-send{width:38px;height:38px;border-radius:11px;background:var(--ember);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .2s;flex-shrink:0}
+.ai-send:hover{background:var(--ember2)}
+.ai-send:disabled{opacity:.4;cursor:default}
+.ai-chips{display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px;border-top:1px solid var(--border)}
+.ai-chip{padding:5px 11px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;font-size:11px;color:var(--text2);cursor:pointer;transition:all .2s;white-space:nowrap}
+.ai-chip:hover{background:var(--surface3);border-color:var(--ember);color:var(--ember)}
+
+.insight-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:8px;animation:fadeUp .3s ease}
+.insight-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.insight-icon{font-size:18px}
+.insight-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--gold)}
+.insight-body{font-size:13px;color:var(--text2);line-height:1.55}
+.bar-row{display:flex;align-items:center;gap:8px;margin-top:7px}
+.bar-lbl{font-size:11px;color:var(--text3);width:70px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{flex:1;height:6px;background:var(--bg4);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;transition:width .6s cubic-bezier(.34,1.56,.64,1)}
+.bar-val{font-size:11px;color:var(--text2);width:52px;text-align:right;flex-shrink:0}
+
+.wa-btn{display:flex;align-items:center;gap:9px;background:rgba(37,211,102,.09);border:1px solid rgba(37,211,102,.22);color:#25d366;border-radius:var(--r-sm);padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;width:100%;transition:all .2s;font-family:'DM Sans',sans-serif}
+.wa-btn:hover{background:rgba(37,211,102,.16)}
+.wa-btn+.wa-btn{margin-top:7px}
+.wa-icon{font-size:17px;flex-shrink:0}
+.wa-section{margin-bottom:14px}
+.wa-section-title{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px}
+
+.prog-wrap{height:5px;background:var(--bg4);border-radius:5px;overflow:hidden;margin-top:5px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--ember),var(--gold));border-radius:5px;transition:width .5s}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:200;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(5px)}
+@media(min-width:600px){.overlay{align-items:center}}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r-xl) var(--r-xl) 0 0;padding:20px 18px 30px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;animation:slideUp .28s cubic-bezier(.34,1.56,.64,1)}
+@media(min-width:600px){.modal{border-radius:var(--r-xl)}}
+@keyframes slideUp{from{transform:translateY(44px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes fadeUp{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.modal-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700}
+.modal-close{width:28px;height:28px;border-radius:7px;background:var(--bg4);border:none;color:var(--text2);cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.modal-close:hover{background:var(--surface3)}
+.divider{border:none;border-top:1px solid var(--border);margin:14px 0}
+.checkbox-row{display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer;font-size:13px;color:var(--text2)}
+.checkbox-row input[type=checkbox]{width:15px;height:15px;accent-color:var(--ember);cursor:pointer}
+.pill-toggle{display:flex;background:var(--bg3);border-radius:9px;padding:3px;gap:2px;border:1px solid var(--border)}
+.pill-opt{flex:1;text-align:center;padding:6px 10px;border-radius:7px;font-size:11px;font-weight:500;cursor:pointer;transition:all .2s;color:var(--text3);border:none;background:transparent;font-family:'DM Sans',sans-serif}
+.pill-opt.active{background:var(--ember);color:#fff}
+
+.toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(50px);background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:9px 16px;font-size:12px;z-index:300;transition:all .3s;opacity:0;white-space:nowrap;box-shadow:var(--shadow);pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.ok{border-color:rgba(76,175,125,.4);color:var(--green)}
+.toast.err{border-color:rgba(255,82,82,.4);color:var(--red)}
+
+.settled-badge{font-size:10px;padding:2px 7px;border-radius:10px;border:1px solid rgba(76,175,125,.35);color:var(--green);background:rgba(76,175,125,.08)}
+.pending-badge-lbl{font-size:10px;padding:2px 7px;border-radius:10px;border:1px solid rgba(255,179,71,.35);color:var(--gold);background:rgba(255,179,71,.08)}
+
+.empty{text-align:center;color:var(--text3);padding:36px 0;display:flex;flex-direction:column;align-items:center;gap:7px}
+.empty-icon{font-size:38px}
+.empty-sub{font-size:12px;color:var(--text4)}
+
+.room-badge{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:5px 12px;font-size:12px;cursor:pointer;transition:all .2s}
+.room-badge:hover{border-color:var(--border3)}
+.room-code{font-family:'Syne',sans-serif;font-weight:700;color:var(--ember);letter-spacing:.5px}
+.copy-hint{font-size:10px;color:var(--text4)}
+
+.pending-item{padding:12px;background:rgba(255,179,71,.05);border:1px solid rgba(255,179,71,.18);border-radius:var(--r-sm);margin-bottom:7px}
+.pending-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--gold);margin-bottom:5px}
+.pending-desc{font-size:13px;font-weight:500;margin-bottom:2px}
+.pending-sub{font-size:11px;color:var(--text3);margin-bottom:8px}
+
+.dot-loader{display:flex;gap:4px;align-items:center;padding:2px 0}
+.dot-loader span{width:5px;height:5px;border-radius:50%;background:var(--text3);animation:dotBounce 1.2s ease-in-out infinite}
+.dot-loader span:nth-child(2){animation-delay:.2s}
+.dot-loader span:nth-child(3){animation-delay:.4s}
+@keyframes dotBounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+
+body *{transition:background-color .25s,border-color .25s,color .25s}
+
+.you-tag{font-size:9px;padding:1px 5px;border-radius:5px;background:rgba(255,107,43,.15);color:var(--ember);border:1px solid rgba(255,107,43,.25);margin-left:4px;font-weight:600}
+.admin-tag{font-size:9px;padding:1px 5px;border-radius:5px;background:rgba(255,179,71,.15);color:var(--gold);border:1px solid rgba(255,179,71,.25);margin-left:4px;font-weight:600}
+
+.split-preview{font-size:11px;color:var(--text3);margin-top:4px}
+
+@media(min-width:960px){
+  .stats-grid{grid-template-columns:repeat(4,1fr)}
+  .ai-panel{height:calc(100vh - 140px)}
+}
+</style>
+</head>
+<body>
+<div class="ambient"></div>
+<div id="root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script>
+const {useState,useEffect,useRef,useCallback,useMemo,useReducer}=React;
+
+const LS='bbqv3_';
+const AV_BG=['rgba(255,107,43,.22)','rgba(91,143,255,.22)','rgba(76,175,125,.22)','rgba(167,139,250,.22)','rgba(255,179,71,.22)','rgba(236,72,153,.22)','rgba(52,211,153,.22)','rgba(245,158,11,.22)'];
+const AV_COL=['#ff6b2b','#5b8fff','#4caf7d','#a78bfa','#ffb347','#ec4899','#34d399','#f59e0b'];
+const CATS=[
+  {id:'food',label:'Food',icon:'🍖',color:'rgba(255,107,43,.15)',tc:'#ff6b2b'},
+  {id:'drinks',label:'Drinks',icon:'🍺',color:'rgba(91,143,255,.15)',tc:'#5b8fff'},
+  {id:'transport',label:'Travel',icon:'🚗',color:'rgba(76,175,125,.15)',tc:'#4caf7d'},
+  {id:'decor',label:'Decor',icon:'🎉',color:'rgba(167,139,250,.15)',tc:'#a78bfa'},
+  {id:'equipment',label:'Gear',icon:'🔧',color:'rgba(255,179,71,.15)',tc:'#ffb347'},
+  {id:'other',label:'Other',icon:'📦',color:'rgba(168,152,128,.15)',tc:'#a89880'},
+];
+const catById=id=>CATS.find(c=>c.id===id)||CATS[5];
+
+function av(n){return n?n.trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2):'?'}
+function avBg(i){return AV_BG[i%AV_BG.length]}
+function avCol(i){return AV_COL[i%AV_COL.length]}
+function fmt(n){return '₹'+Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function fmtS(n){const v=Number(n||0);return v>=1000?'₹'+(v/1000).toFixed(1)+'k':'₹'+v.toFixed(0)}
+function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function genRoom(){return Math.random().toString(36).slice(2,8).toUpperCase()}
+function now(){return Date.now()}
+function timeAgo(ts){const s=Math.floor((now()-ts)/1000);if(s<60)return 'just now';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago'}
+
+function load(k){try{const d=localStorage.getItem(LS+k);return d?JSON.parse(d):null}catch{return null}}
+function save(k,v){try{localStorage.setItem(LS+k,JSON.stringify(v))}catch{}}
+function loadRoom(code){return load('room_'+code)}
+function saveRoom(code,d){save('room_'+code,d)}
+
+function calcSettlements(friends,expenses){
+  const bal={};friends.forEach(f=>bal[f.id]=0);
+  expenses.forEach(exp=>{
+    const payers=Array.isArray(exp.paidBy)?exp.paidBy:[{id:exp.paidBy,amount:exp.amount}];
+    const sw=exp.splitWith&&exp.splitWith.length>0?exp.splitWith:friends.map(f=>f.id);
+    const total=payers.reduce((s,p)=>s+Number(p.amount||0),0);
+    const share=sw.length?total/sw.length:0;
+    payers.forEach(p=>{if(bal[p.id]!==undefined)bal[p.id]+=Number(p.amount||0)});
+    sw.forEach(id=>{if(bal[id]!==undefined)bal[id]-=share});
+  });
+  const pos=[],neg=[];
+  Object.entries(bal).forEach(([id,b])=>{
+    const v=Math.round(b*100)/100;
+    if(v>.01)pos.push({id,amount:v});else if(v<-.01)neg.push({id,amount:Math.abs(v)});
+  });
+  pos.sort((a,b)=>b.amount-a.amount);neg.sort((a,b)=>b.amount-a.amount);
+  const txns=[];let pi=0,ni=0;
+  while(pi<pos.length&&ni<neg.length){
+    const p=pos[pi],n=neg[ni],amt=Math.min(p.amount,n.amount);
+    txns.push({from:n.id,to:p.id,amount:Math.round(amt*100)/100});
+    p.amount-=amt;n.amount-=amt;
+    if(p.amount<.01)pi++;if(n.amount<.01)ni++;
+  }
+  return txns;
+}
+
+function buildSummaryMsg(event,friends,expenses,txns,settled){
+  const fn=id=>(friends.find(f=>f.id===id)||{name:'Unknown'}).name;
+  const total=expenses.reduce((s,e)=>s+Number(e.amount||0),0);
+  let m=`🔥 *${event.name} — Expense Summary*\n📅 ${event.date}\n\n`;
+  m+=`👥 *Crew (${friends.length}):* ${friends.map(f=>f.name).join(', ')}\n\n`;
+  m+=`*💸 Expenses:*\n`;
+  expenses.forEach(e=>{
+    const cat=catById(e.category);
+    const payers=Array.isArray(e.paidBy)?e.paidBy:[{id:e.paidBy,amount:e.amount}];
+    m+=`${cat.icon} ${e.description}: ₹${Number(e.amount).toFixed(0)} — paid by ${payers.map(p=>`${fn(p.id)} (₹${Number(p.amount||0).toFixed(0)})`).join(', ')}\n`;
+  });
+  m+=`\n💰 *Total:* ₹${total.toFixed(0)}\n👤 *Per head:* ₹${friends.length?Math.round(total/friends.length):0}\n\n`;
+  m+=`*⚖️ Settlements:*\n`;
+  txns.forEach(t=>{
+    const s=settled.find(x=>x.from===t.from&&x.to===t.to);
+    m+=`${s?'✅':'⏳'} ${fn(t.from)} → ${fn(t.to)}: ₹${t.amount.toFixed(0)}\n`;
+  });
+  m+=`\n_Shared via BBQ Split 🔥_`;
+  return m;
+}
+function buildReminderMsg(event,friends,txns,settled,targetId){
+  const fn=id=>(friends.find(f=>f.id===id)||{name:'Unknown'}).name;
+  const owing=txns.filter(t=>t.from===targetId&&!settled.find(s=>s.from===t.from&&s.to===t.to));
+  if(!owing.length)return null;
+  const name=fn(targetId);
+  let m=`Hey ${name}! 👋\n\nReminder from *${event.name}* 🔥\n\n`;
+  owing.forEach(t=>m+=`💸 You owe *${fn(t.to)}* → ₹${t.amount.toFixed(0)}\n`);
+  const tot=owing.reduce((s,t)=>s+t.amount,0);
+  m+=`\n*Total you owe: ₹${tot.toFixed(0)}*\n\nPlease settle up soon! 🙏\n_Sent via BBQ Split_`;
+  return m;
+}
+function openWA(msg){window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank')}
+
+function freshRoom(adminName,adminId){
+  return {event:{name:'BBQ Night 🔥',date:new Date().toISOString().slice(0,10)},friends:[{id:adminId,name:adminName,isAdmin:true}],expenses:[],settlements:[],pendingEdits:[],timeline:[],createdAt:now()};
+}
+
+async function callAI(messages,systemPrompt){
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':window.ANTHROPIC_KEY||''},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:systemPrompt,messages})});
+    if(!res.ok)return null;
+    const d=await res.json();
+    return d.content?.[0]?.text||'';
+  }catch(e){return null}
+}
+
+function useToast(){
+  const [t,set]=useState({msg:'',type:'',show:false});
+  const show=useCallback((msg,type='')=>{set({msg,type,show:true});setTimeout(()=>set(x=>({...x,show:false})),2600);},[]);
+  return [t,show];
+}
+
+function Av({name,idx,size=''}){
+  return React.createElement('div',{className:'av'+(size?' av-'+size:''),style:{background:avBg(idx),color:avCol(idx)}},av(name));
+}
+
+function App(){
+  const [screen,setScreen]=useState('loading');
+  const [myId,setMyId]=useState(()=>load('myId')||null);
+  const [myName,setMyName]=useState(()=>load('myName')||'');
+  const [roomCode,setRoomCode]=useState(()=>load('roomCode')||'');
+  const [roomData,setRoomData]=useState(null);
+  const [tab,setTab]=useState('expenses');
+  const [modal,setModal]=useState(null);
+  const [editTarget,setEditTarget]=useState(null);
+  const [theme,setTheme]=useState(()=>load('theme')||'dark');
+  const [toast,showToast]=useToast();
+
+  useEffect(()=>{document.documentElement.setAttribute('data-theme',theme);save('theme',theme);},[theme]);
+
+  useEffect(()=>{if(myId&&roomCode){const rd=loadRoom(roomCode);if(rd){setRoomData(rd);setScreen('app');}else setScreen('room');}else setScreen('room');},[]);
+
+  useEffect(()=>{if(roomData&&roomCode)saveRoom(roomCode,roomData);},[roomData,roomCode]);
+
+  useEffect(()=>{if(!roomCode||screen!=='app')return;const iv=setInterval(()=>{const rd=loadRoom(roomCode);if(rd&&JSON.stringify(rd)!==JSON.stringify(roomData))setRoomData(rd);},3000);return()=>clearInterval(iv);},[roomCode,screen,roomData]);
+
+  function updateRoom(patch){setRoomData(prev=>{const next={...prev,...patch};if(roomCode)saveRoom(roomCode,next);return next;});}
+
+  function addTimeline(action,detail){const entry={id:genId(),ts:now(),action,detail,by:myId};setRoomData(prev=>{const next={...prev,timeline:[entry,...(prev.timeline||[])].slice(0,100)};if(roomCode)saveRoom(roomCode,next);return next;});}
+
+  function createRoom(adminName){const code=genRoom();const id=genId();const rd=freshRoom(adminName,id);setMyId(id);setMyName(adminName);setRoomCode(code);save('myId',id);save('myName',adminName);save('roomCode',code);saveRoom(code,rd);setRoomData(rd);setScreen('app');showToast('Room created! Share the code 🎉','ok');}
+
+  function joinRoom(code,name){const rd=loadRoom(code.toUpperCase());if(!rd){showToast('Room not found!','err');return false;}const id=genId();const newFriend={id,name,isAdmin:false};const existing=rd.friends.find(f=>f.name.toLowerCase()===name.toLowerCase());let updatedRd=rd;if(!existing){updatedRd={...rd,friends:[...rd.friends,newFriend]};saveRoom(code.toUpperCase(),updatedRd);}const me=existing||newFriend;setMyId(me.id);setMyName(me.name);setRoomCode(code.toUpperCase());save('myId',me.id);save('myName',me.name);save('roomCode',code.toUpperCase());setRoomData(updatedRd);setScreen('app');showToast(`Welcome, ${me.name}! 🎉`,'ok');return true;}
+
+  function leaveRoom(){save('myId',null);save('myName','');save('roomCode','');setMyId(null);setMyName('');setRoomCode('');setRoomData(null);setScreen('room');}
+
+  if(screen==='loading')return React.createElement('div',{style:{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',fontSize:32}},'🔥');
+  if(screen==='room')return React.createElement(RoomScreen,{createRoom,joinRoom,theme,setTheme,toast,showToast});
+
+  const {event,friends,expenses,settlements:settled,pendingEdits,timeline}=roomData||{};
+  const isAdmin=(friends||[]).find(f=>f.id===myId)?.isAdmin||false;
+  const txns=calcSettlements(friends||[],expenses||[]);
+  const total=(expenses||[]).reduce((s,e)=>s+Number(e.amount||0),0);
+  const pendingCount=(pendingEdits||[]).length;
+  const findName=id=>(friends||[]).find(f=>f.id===id)?.name||'Unknown';
+
+  function openModal(m,t=null){setModal(m);setEditTarget(t);}
+  function closeModal(){setModal(null);setEditTarget(null);}
+
+  function addFriend(name){if(!name.trim())return;const f={id:genId(),name:name.trim(),isAdmin:false};updateRoom({friends:[...(friends||[]),f]});addTimeline('👤 Added member',name);showToast(name+' added ✓','ok');}
+  function deleteFriend(id){if((friends||[]).length<=1){showToast('Need at least one person!','err');return;}updateRoom({friends:(friends||[]).filter(f=>f.id!==id)});}
+  function addExpense(exp){const e={...exp,id:genId(),createdAt:now(),addedBy:myId};if(!isAdmin){updateRoom({pendingEdits:[...(pendingEdits||[]),{id:genId(),type:'add',data:e,requestedAt:now(),by:myId}]});showToast('Request sent to admin ⏳');}else{updateRoom({expenses:[...(expenses||[]),e]});addTimeline('💸 Added expense',`${exp.description} — ${fmt(exp.amount)}`);showToast('Expense added ✓','ok');}}
+  function updateExpense(id,patch){if(!isAdmin){updateRoom({pendingEdits:[...(pendingEdits||[]),{id:genId(),type:'edit',expenseId:id,data:patch,requestedAt:now(),by:myId}]});showToast('Edit request sent ⏳');}else{updateRoom({expenses:(expenses||[]).map(e=>e.id===id?{...e,...patch}:e)});showToast('Updated ✓','ok');}}
+  function deleteExpense(id){if(!isAdmin){showToast('Only admin can delete','err');return;}const e=(expenses||[]).find(x=>x.id===id);updateRoom({expenses:(expenses||[]).filter(e=>e.id!==id)});if(e)addTimeline('🗑 Deleted expense',e.description);showToast('Removed');}
+  function approvePending(pid){const p=(pendingEdits||[]).find(x=>x.id===pid);if(!p)return;if(p.type==='add')updateRoom({expenses:[...(expenses||[]),p.data],pendingEdits:(pendingEdits||[]).filter(x=>x.id!==pid)});if(p.type==='edit')updateRoom({expenses:(expenses||[]).map(e=>e.id===p.expenseId?{...e,...p.data}:e),pendingEdits:(pendingEdits||[]).filter(x=>x.id!==pid)});addTimeline('✅ Approved edit',p.data?.description||'');showToast('Approved ✓','ok');}
+  function rejectPending(pid){updateRoom({pendingEdits:(pendingEdits||[]).filter(x=>x.id!==pid)});showToast('Rejected');}
+  function toggleSettled(from,to){const exists=(settled||[]).find(x=>x.from===from&&x.to===to);if(exists){updateRoom({settlements:(settled||[]).filter(x=>!(x.from===from&&x.to===to))});}else{updateRoom({settlements:[...(settled||[]),{from,to,at:now()}]});addTimeline('✅ Settled',`${findName(from)} → ${findName(to)}`);}  }
+
+  const TABS=[{id:'expenses',label:'💸 Expenses'},{id:'settle',label:'⚖️ Settle'},{id:'friends',label:'👥 Crew'},{id:'ai',label:'🤖 AI'},{id:'insights',label:'📊 Insights'},{id:'timeline',label:'🕑 Timeline'},{id:'whatsapp',label:'📲 WhatsApp'}];
+
+  return React.createElement('div',{className:'app'},
+    React.createElement('div',{className:'header'},
+      React.createElement('div',{className:'logo'},
+        React.createElement('div',{className:'logo-icon'},'🔥'),
+        React.createElement('span',{className:'logo-text'},'BBQ',React.createElement('em',null,'Split'))
+      ),
+      React.createElement('div',{className:'hdr-actions'},
+        React.createElement('div',{className:'room-badge',onClick:()=>openModal('roomInfo'),title:'Share room'},
+          React.createElement('span',{className:'room-code'},roomCode),
+          React.createElement('span',{className:'copy-hint'},'share')
+        ),
+        pendingCount>0&&isAdmin&&React.createElement('button',{className:'icon-btn',style:{position:'relative'},onClick:()=>openModal('pending'),title:'Pending reviews'},'⏳',React.createElement('span',{style:{position:'absolute',top:'-4px',right:'-4px',background:'var(--ember)',color:'#fff',fontSize:'9px',fontWeight:'700',minWidth:'16px',height:'16px',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',padding:'0 3px'}},pendingCount)),
+        React.createElement('button',{className:'icon-btn',onClick:()=>setTheme(t=>t==='dark'?'light':'dark'),title:'Toggle theme'},theme==='dark'?'☀️':'🌙'),
+        React.createElement('button',{className:'icon-btn',onClick:leaveRoom,title:'Leave room'},'🚪')
+      )
+    ),
+
+    React.createElement('div',{className:'event-hero'},
+      React.createElement('div',{style:{display:'flex',alignItems:'flex-start',justifyContent:'space-between'}},
+        React.createElement('div',{className:'event-name'},event?.name||'BBQ Night'),
+        isAdmin&&React.createElement('button',{className:'btn btn-ghost btn-xs',style:{marginTop:2},onClick:()=>openModal('editEvent')},'✏️')
+      ),
+      React.createElement('div',{style:{fontSize:12,color:'var(--text3)',marginBottom:6}},'📅 '+event?.date+' · '+friends?.length+' people'),
+      React.createElement('div',{className:'crew-row'},
+        (friends||[]).map((f,i)=>React.createElement('div',{key:f.id,className:'chip'},
+          React.createElement(Av,{name:f.name,idx:i}),
+          React.createElement('span',{style:{fontSize:12}},f.name.split(' ')[0]),
+          f.id===myId&&React.createElement('span',{className:'you-tag'},'you'),
+          f.isAdmin&&f.id!==myId&&React.createElement('span',{className:'admin-tag'},'admin'),
+          isAdmin&&(friends||[]).length>1&&f.id!==myId&&React.createElement('button',{className:'chip-del',onClick:()=>deleteFriend(f.id)},'×')
+        )),
+        isAdmin&&React.createElement('button',{className:'btn btn-ghost btn-xs',style:{borderStyle:'dashed'},onClick:()=>openModal('addFriend')},'+ Add')
+      )
+    ),
+
+    React.createElement('div',{className:'stats-grid'},
+      React.createElement('div',{className:'stat'},
+        React.createElement('div',{className:'stat-val'},fmtS(total)),
+        React.createElement('div',{className:'stat-lbl'},'Total Spent')
+      ),
+      React.createElement('div',{className:'stat'},
+        React.createElement('div',{className:'stat-val'},(friends?.length&&total)?fmtS(total/friends.length):'₹0'),
+        React.createElement('div',{className:'stat-lbl'},'Per Head')
+      ),
+      React.createElement('div',{className:'stat'},
+        React.createElement('div',{className:'stat-val'},expenses?.length||0),
+        React.createElement('div',{className:'stat-lbl'},'Expenses')
+      ),
+      React.createElement('div',{className:'stat'},
+        React.createElement('div',{className:'stat-val'},txns.filter(t=>!(settled||[]).find(s=>s.from===t.from&&s.to===t.to)).length),
+        React.createElement('div',{className:'stat-lbl'},'Pending')
+      )
+    ),
+
+    React.createElement('div',{className:'tabs'},
+      TABS.map(t=>React.createElement('button',{key:t.id,className:'tab'+(tab===t.id?' active':''),onClick:()=>setTab(t.id)},
+        t.label,
+        t.id==='settle'&&txns.filter(x=>!(settled||[]).find(s=>s.from===x.from&&s.to===x.to)).length>0&&React.createElement('span',{className:'tab-badge'},txns.filter(x=>!(settled||[]).find(s=>s.from===x.from&&s.to===x.to)).length),
+        t.id==='ai'&&React.createElement('span',{className:'tab-badge'},'AI')
+      ))
+    ),
+
+    tab==='expenses'&&React.createElement(ExpensesTab,{expenses:expenses||[],friends:friends||[],isAdmin,myId,openModal,deleteExpense,findName}),
+    tab==='settle'&&React.createElement(SettleTab,{txns,settled:settled||[],friends:friends||[],toggleSettled,findName}),
+    tab==='friends'&&React.createElement(FriendsTab,{friends:friends||[],expenses:expenses||[],total,isAdmin,myId,deleteFriend}),
+    tab==='ai'&&React.createElement(AITab,{friends:friends||[],expenses:expenses||[],event,txns,settled:settled||[],addExpense,findName,myId,showToast}),
+    tab==='insights'&&React.createElement(InsightsTab,{friends:friends||[],expenses:expenses||[],total,txns,settled:settled||[],findName}),
+    tab==='timeline'&&React.createElement(TimelineTab,{timeline:timeline||[],findName}),
+    tab==='whatsapp'&&React.createElement(WhatsAppTab,{event,friends:friends||[],expenses:expenses||[],txns,settled:settled||[],findName}),
+
+    tab==='expenses'&&React.createElement('button',{className:'btn-fab',onClick:()=>openModal('addExpense'),title:'Add expense'},'+'),
+
+    React.createElement('div',{className:'toast '+toast.type+(toast.show?' show':'')},toast.msg),
+
+    modal==='addFriend'&&React.createElement(AddFriendModal,{onAdd:addFriend,onClose:closeModal}),
+    modal==='addExpense'&&React.createElement(AddExpenseModal,{friends:friends||[],myId,onAdd:addExpense,onClose:closeModal}),
+    modal==='editEvent'&&React.createElement(EditEventModal,{event,onSave:e=>{updateRoom({event:e});closeModal();showToast('Updated ✓','ok')},onClose:closeModal}),
+    modal==='editExpense'&&React.createElement(EditExpenseModal,{expense:editTarget,friends:friends||[],onSave:(id,p)=>{updateExpense(id,p);closeModal()},onClose:closeModal}),
+    modal==='pending'&&React.createElement(PendingModal,{pendingEdits:pendingEdits||[],expenses:expenses||[],friends:friends||[],approvePending,rejectPending,findName,onClose:closeModal}),
+    modal==='roomInfo'&&React.createElement(RoomInfoModal,{roomCode,event,friends:friends||[],myId,showToast,onClose:closeModal})
+  );
+}
+
+function RoomScreen({createRoom,joinRoom,theme,setTheme,toast,showToast}){
+  const [view,setView]=useState('home');
+  const [name,setName]=useState('');
+  const [joinCode,setJoinCode]=useState('');
+  const [joinName,setJoinName]=useState('');
+  const [err,setErr]=useState('');
+
+  useEffect(()=>{const p=new URLSearchParams(window.location.search);const c=p.get('room');if(c){setJoinCode(c.toUpperCase());setView('join');}},[]);
+
+  if(view==='home')return React.createElement('div',{className:'room-screen'},
+    React.createElement('div',{className:'room-card'},
+      React.createElement('div',{className:'room-logo'},'🔥'),
+      React.createElement('h1',{className:'room-title'},'BBQ',React.createElement('em',null,'Split')),
+      React.createElement('p',{className:'room-sub'},'Smart expense splitting for your crew.\\nPowered by AI. No signup needed.'),
+      React.createElement('button',{className:'btn btn-primary btn-full',style:{fontSize:15,padding:'13px'},onClick:()=>setView('create')},'🎉 Create a New Room'),
+      React.createElement('div',{className:'room-divider'},'or'),
+      React.createElement('button',{className:'btn btn-ghost btn-full',onClick:()=>setView('join')},'Enter Room Code'),
+      React.createElement('div',{style:{marginTop:20,fontSize:11,color:'var(--text4)',lineHeight:1.6}},'Admin creates the room · Share the code · Friends join · AI handles the maths')
+    ),
+    React.createElement('div',{style:{marginTop:16}},
+      React.createElement('button',{className:'icon-btn',onClick:()=>setTheme(t=>t==='dark'?'light':'dark'),style:{margin:'0 auto',display:'flex'}},theme==='dark'?'☀️':'🌙')
+    ),
+    React.createElement('div',{className:'toast '+toast.type+(toast.show?' show':'')},toast.msg)
+  );
+
+  if(view==='create')return React.createElement('div',{className:'room-screen'},
+    React.createElement('div',{className:'room-card'},
+      React.createElement('div',{className:'modal-hdr'},
+        React.createElement('span',{className:'modal-title'},'Create Room'),
+        React.createElement('button',{className:'modal-close',onClick:()=>setView('home')},'×')
+      ),
+      React.createElement('div',{className:'field'},
+        React.createElement('label',{className:'field-label'},'Your Name (Admin)'),
+        React.createElement('input',{className:'inp',placeholder:'e.g. Rahul',value:name,onChange:e=>setName(e.target.value),onKeyDown:e=>e.key==='Enter'&&name.trim()&&createRoom(name.trim())})
+      ),
+      err&&React.createElement('div',{style:{color:'var(--red)',fontSize:12,marginBottom:10}},err),
+      React.createElement('button',{className:'btn btn-primary btn-full',onClick:()=>{if(!name.trim()){setErr('Enter your name');return;}createRoom(name.trim())}},'🔥 Create Room')
+    )
+  );
+
+  if(view==='join')return React.createElement('div',{className:'room-screen'},
+    React.createElement('div',{className:'room-card'},
+      React.createElement('div',{className:'modal-hdr'},
+        React.createElement('span',{className:'modal-title'},'Join Room'),
+        React.createElement('button',{className:'modal-close',onClick:()=>setView('home')},'×')
+      ),
+      React.createElement('div',{className:'join-form'},
+        React.createElement('div',{className:'field'},
+          React.createElement('label',{className:'field-label'},'Room Code'),
+          React.createElement('input',{className:'inp',placeholder:'e.g. AB12CD',value:joinCode,onChange:e=>setJoinCode(e.target.value.toUpperCase()),maxLength:6})
+        ),
+        React.createElement('div',{className:'field'},
+          React.createElement('label',{className:'field-label'},'Your Name'),
+          React.createElement('input',{className:'inp',placeholder:'e.g. Priya',value:joinName,onChange:e=>setJoinName(e.target.value),onKeyDown:e=>e.key==='Enter'&&joinRoom(joinCode,joinName)})
+        ),
+        err&&React.createElement('div',{style:{color:'var(--red)',fontSize:12,marginBottom:6}},err),
+        React.createElement('button',{className:'btn btn-primary btn-full',onClick:()=>{if(!joinCode.trim()||!joinName.trim()){setErr('Fill all fields');return;}if(!joinRoom(joinCode,joinName))setErr('Room not found!');}},'Join Room')
+      )
+    )
+  );
+}
+
+function ExpensesTab({expenses,friends,isAdmin,myId,openModal,deleteExpense,findName}){
+  const [filter,setFilter]=useState('all');
+  const filtered=filter==='all'?expenses:expenses.filter(e=>e.category===filter);
+  return React.createElement('div',{className:'section'},
+    expenses.length>0&&React.createElement('div',{style:{display:'flex',gap:6,marginBottom:12,overflowX:'auto',paddingBottom:2}},
+      React.createElement('button',{className:'btn btn-xs '+(filter==='all'?'btn-primary':'btn-ghost'),onClick:()=>setFilter('all')},'All ('+expenses.length+')'),
+      CATS.map(c=>{const cnt=expenses.filter(e=>e.category===c.id).length;return cnt>0&&React.createElement('button',{key:c.id,className:'btn btn-xs '+(filter===c.id?'btn-primary':'btn-ghost'),onClick:()=>setFilter(c.id)},c.icon+' '+cnt);})
+    ),
+    filtered.length===0&&React.createElement('div',{className:'empty'},
+      React.createElement('div',{className:'empty-icon'},'🍖'),
+      React.createElement('div',null,expenses.length?'No expenses in this category':'No expenses yet'),
+      React.createElement('div',{className:'empty-sub'},'Tap + to add an expense')
+    ),
+    filtered.map(exp=>{
+      const payers=Array.isArray(exp.paidBy)?exp.paidBy:[{id:exp.paidBy,amount:exp.amount}];
+      const sw=exp.splitWith||friends.map(f=>f.id);
+      const cat=catById(exp.category);
+      const payerStr=payers.map(p=>findName(p.id).split(' ')[0]+'('+fmtS(p.amount)+')').join(', ');
+      return React.createElement('div',{key:exp.id,className:'exp-row'},
+        React.createElement('div',{className:'exp-cat'},cat.icon),
+        React.createElement('div',{className:'exp-info'},
+          React.createElement('div',{className:'exp-desc'},exp.description),
+          React.createElement('div',{className:'exp-meta'},'By '+payerStr+' · '+sw.length+' way split')
+        ),
+        React.createElement('div',{className:'exp-right'},
+          React.createElement('div',{className:'exp-amt'},fmt(exp.amount)),
+          React.createElement('div',{className:'exp-actions'},
+            React.createElement('button',{className:'btn btn-ghost btn-xs',onClick:()=>openModal('editExpense',exp)},'✏️'),
+            isAdmin&&React.createElement('button',{className:'btn btn-xs btn-danger',onClick:()=>deleteExpense(exp.id)},'✕')
+          )
+        )
+      );
+    })
+  );
+}
+
+function SettleTab({txns,settled,friends,toggleSettled,findName}){
+  const pending=txns.filter(t=>!settled.find(s=>s.from===t.from&&s.to===t.to));
+  const done=txns.filter(t=>settled.find(s=>s.from===t.from&&s.to===t.to));
+  const total=txns.reduce((s,t)=>s+t.amount,0);
+  const doneAmt=done.reduce((s,t)=>s+t.amount,0);
+  const pct=total?(doneAmt/total*100):0;
+
+  return React.createElement('div',{className:'section'},
+    txns.length>0&&React.createElement('div',{className:'card',style:{marginBottom:14}},
+      React.createElement('div',{style:{display:'flex',justifyContent:'space-between',marginBottom:5}},
+        React.createElement('span',{style:{fontSize:12,color:'var(--text3)'}},'Settlement Progress'),
+        React.createElement('span',{style:{fontSize:12,color:'var(--gold)',fontWeight:600}},Math.round(pct)+'%')
+      ),
+      React.createElement('div',{className:'prog-wrap'},React.createElement('div',{className:'prog-fill',style:{width:pct+'%'}})),
+      React.createElement('div',{style:{fontSize:11,color:'var(--text4)',marginTop:4}},done.length+' of '+txns.length+' settled · '+fmt(doneAmt)+' of '+fmt(total))
+    ),
+    pending.length>0&&React.createElement('div',null,
+      React.createElement('div',{className:'section-title'},'Pending ('+pending.length+')'),
+      pending.map(t=>{
+        const fi=friends.findIndex(f=>f.id===t.from);
+        const ti=friends.findIndex(f=>f.id===t.to);
+        return React.createElement('div',{key:t.from+t.to,className:'settle-row'},
+          React.createElement(Av,{name:findName(t.from),idx:fi<0?0:fi}),
+          React.createElement('div',{className:'settle-from'},findName(t.from).split(' ')[0]),
+          React.createElement('span',{className:'settle-arrow'},'→'),
+          React.createElement('div',{className:'settle-to'},findName(t.to).split(' ')[0]),
+          React.createElement(Av,{name:findName(t.to),idx:ti<0?0:ti}),
+          React.createElement('div',{className:'settle-amt'},fmt(t.amount)),
+          React.createElement('button',{className:'btn btn-success btn-xs',onClick:()=>toggleSettled(t.from,t.to)},'Settle')
+        );
+      })
+    ),
+    done.length>0&&React.createElement('div',{style:{marginTop:14}},
+      React.createElement('div',{className:'section-title'},'Settled ('+done.length+')'),
+      done.map(t=>{
+        const fi=friends.findIndex(f=>f.id===t.from);
+        return React.createElement('div',{key:t.from+t.to,className:'settle-row',style:{opacity:.5}},
+          React.createElement(Av,{name:findName(t.from),idx:fi<0?0:fi}),
+          React.createElement('div',{style:{flex:1,fontSize:12}},findName(t.from).split(' ')[0]+' → '+findName(t.to).split(' ')[0]),
+          React.createElement('span',{className:'settled-badge'},'Settled '+fmt(t.amount)),
+          React.createElement('button',{className:'btn btn-xs btn-ghost',onClick:()=>toggleSettled(t.from,t.to)},'Undo')
+        );
+      })
+    ),
+    txns.length===0&&React.createElement('div',{className:'empty'},
+      React.createElement('div',{className:'empty-icon'},'🎉'),
+      React.createElement('div',null,"Everyone's square!"),
+      React.createElement('div',{className:'empty-sub'},'No settlements needed')
+    )
+  );
+}
+
+function FriendsTab({friends,expenses,total,isAdmin,myId,deleteFriend}){
+  return React.createElement('div',{className:'section'},
+    React.createElement('div',{className:'section-title'},'Crew ('+friends.length+')'),
+    friends.map((f,i)=>{
+      const paid=expenses.reduce((s,e)=>{const payers=Array.isArray(e.paidBy)?e.paidBy:[{id:e.paidBy,amount:e.amount}];return s+payers.filter(p=>p.id===f.id).reduce((a,p)=>a+Number(p.amount||0),0);},0);
+      const share=friends.length?total/friends.length:0;
+      const net=paid-share;
+      const pct=total?Math.min(100,(paid/total)*100):0;
+      return React.createElement('div',{key:f.id,className:'card'},
+        React.createElement('div',{style:{display:'flex',alignItems:'center',gap:11}},
+          React.createElement(Av,{name:f.name,idx:i,size:'lg'}),
+          React.createElement('div',{style:{flex:1}},
+            React.createElement('div',{style:{display:'flex',alignItems:'center',gap:5,marginBottom:2}},
+              React.createElement('span',{style:{fontSize:14,fontWeight:500}},f.name),
+              f.id===myId&&React.createElement('span',{className:'you-tag'},'you'),
+              f.isAdmin&&React.createElement('span',{className:'admin-tag'},'admin')
+            ),
+            React.createElement('div',{style:{fontSize:11,color:'var(--text3)'}},'Paid: '+fmt(paid)+' · Share: '+fmt(share)),
+            React.createElement('div',{style:{fontSize:12,fontWeight:600,marginTop:2,color:net>=0?'var(--green)':'var(--red)'}},net>=0?'+'+fmt(net)+' gets back':fmt(Math.abs(net))+' owes'),
+            React.createElement('div',{className:'prog-wrap',style:{marginTop:5}},React.createElement('div',{className:'prog-fill',style:{width:pct+'%'}}))
+          ),
+          isAdmin&&f.id!==myId&&React.createElement('button',{className:'btn btn-danger btn-xs',onClick:()=>deleteFriend(f.id)},'×')
+        )
+      );
+    })
+  );
+}
+
+function AITab({friends,expenses,event,txns,settled,addExpense,findName,myId,showToast}){
+  const [msgs,setMsgs]=useState([{role:'bot',content:'Hey! 👋 I\'m your BBQ Split AI. I can:\n\n• Add expenses naturally\n• Answer questions about balances\n• Suggest settlements\n\nWhat\'s up?',ts:now()}]);
+  const [input,setInput]=useState('');
+  const [loading,setLoading]=useState(false);
+  const bottomRef=useRef();
+
+  useEffect(()=>{bottomRef.current?.scrollIntoView({behavior:'smooth'});},[msgs]);
+
+  const SUGGESTIONS=['Who spent most?','Add: Paid 500 for food','What\'s everyone\'s balance?'];
+
+  async function send(text){
+    const t=text||input.trim();
+    if(!t||loading)return;
+    setInput('');
+    const userMsg={role:'user',content:t,ts:now()};
+    setMsgs(m=>[...m,userMsg]);
+    setLoading(true);
+
+    const context=`You are an AI for BBQ expense splitting. Event: ${event?.name}. Friends: ${friends.map(f=>f.name).join(', ')}. Expenses: ${expenses.length}. Be concise.`;
+    const history=msgs.slice(-4).map(m=>({role:m.role==='bot'?'assistant':'user',content:m.content}));
+    history.push({role:'user',content:t});
+
+    const reply=await callAI(history,context);
+    setMsgs(m=>[...m,{role:'bot',content:reply||'I\'m not available right now.',ts:now()}]);
+    setLoading(false);
+  }
+
+  return React.createElement('div',{className:'ai-panel'},
+    React.createElement('div',{className:'ai-chips'},
+      SUGGESTIONS.map(s=>React.createElement('button',{key:s,className:'ai-chip',onClick:()=>send(s)},s))
+    ),
+    React.createElement('div',{className:'ai-msgs'},
+      msgs.map((m,i)=>React.createElement('div',{key:i,className:'ai-msg '+(m.role==='user'?'user':'')},
+        m.role==='bot'&&React.createElement('div',{className:'ai-avatar'},'🤖'),
+        React.createElement('div',{className:'ai-bubble '+(m.role==='user'?'user':'bot')},m.content.replace(/\n/g,' ')),
+        m.role==='user'&&React.createElement(Av,{name:findName(myId),idx:friends.findIndex(f=>f.id===myId)})
+      )),
+      loading&&React.createElement('div',{className:'ai-msg'},
+        React.createElement('div',{className:'ai-avatar'},'🤖'),
+        React.createElement('div',{className:'ai-bubble bot thinking'},React.createElement('div',{className:'dot-loader'},React.createElement('span'),React.createElement('span'),React.createElement('span')))
+      ),
+      React.createElement('div',{ref:bottomRef})
+    ),
+    React.createElement('div',{className:'ai-footer'},
+      React.createElement('textarea',{className:'ai-input',placeholder:'Ask something...',value:input,onChange:e=>setInput(e.target.value),onKeyDown:e=>e.key==='Enter'&&!e.shiftKey&&(e.preventDefault(),send()),rows:1}),
+      React.createElement('button',{className:'ai-send',onClick:()=>send(),disabled:loading||!input.trim()},'↑')
+    )
+  );
+}
+
+function InsightsTab({friends,expenses,total,txns,settled,findName}){
+  const catTotals=useMemo(()=>{const m={};CATS.forEach(c=>m[c.id]=0);expenses.forEach(e=>m[e.category||'other']=(m[e.category||'other']||0)+Number(e.amount||0));return m;},[expenses]);
+  const topCat=CATS.reduce((a,c)=>catTotals[c.id]>catTotals[a.id]?c:a,CATS[0]);
+
+  const spendByPerson=useMemo(()=>{return friends.map(f=>{const paid=expenses.reduce((s,e)=>{const payers=Array.isArray(e.paidBy)?e.paidBy:[{id:e.paidBy,amount:e.amount}];return s+payers.filter(p=>p.id===f.id).reduce((a,p)=>a+Number(p.amount||0),0);},0);return{...f,paid};}).sort((a,b)=>b.paid-a.paid);},[friends,expenses]);
+
+  const topSpender=spendByPerson[0];
+
+  if(!expenses.length)return React.createElement('div',{className:'section'},React.createElement('div',{className:'empty'},React.createElement('div',{className:'empty-icon'},'📊'),React.createElement('div',null,'Add expenses to see insights')));
+
+  return React.createElement('div',{className:'section'},
+    React.createElement('div',{className:'section-title'},'Key Insights'),
+    topSpender&&React.createElement('div',{className:'insight-card'},
+      React.createElement('div',{className:'insight-header'},
+        React.createElement('span',{className:'insight-icon'},'🏆'),
+        React.createElement('span',{className:'insight-title'},'Top Spender')
+      ),
+      React.createElement('div',{className:'insight-body'},topSpender.name,' paid ',fmt(topSpender.paid))
+    ),
+    React.createElement('div',{className:'insight-card'},
+      React.createElement('div',{className:'insight-header'},
+        React.createElement('span',{className:'insight-icon'},topCat.icon),
+        React.createElement('span',{className:'insight-title'},'Biggest Category')
+      ),
+      React.createElement('div',{className:'insight-body'},topCat.label,' — ',fmt(catTotals[topCat.id]))
+    ),
+    React.createElement('div',{className:'section-title',style:{marginTop:16}},'Spend by Person'),
+    React.createElement('div',{className:'insight-card'},
+      spendByPerson.map((f,i)=>React.createElement('div',{key:f.id,className:'bar-row'},
+        React.createElement('div',{className:'bar-lbl'},f.name.split(' ')[0]),
+        React.createElement('div',{className:'bar-track'},React.createElement('div',{className:'bar-fill',style:{width:(total?f.paid/total*100:0)+'%',background:avCol(i)}})),
+        React.createElement('div',{className:'bar-val'},fmtS(f.paid))
+      ))
+    )
+  );
+}
+
+function TimelineTab({timeline,findName}){
+  if(!timeline||!timeline.length)return React.createElement('div',{className:'section'},React.createElement('div',{className:'empty'},React.createElement('div',{className:'empty-icon'},'🕑'),React.createElement('div',null,'No activity yet')));
+  return React.createElement('div',{className:'section'},
+    React.createElement('div',{className:'section-title'},'Activity Timeline'),
+    React.createElement('div',{className:'timeline'},
+      timeline.map(e=>React.createElement('div',{key:e.id,className:'tl-item'},
+        React.createElement('div',{className:'tl-dot'}),
+        React.createElement('div',{className:'tl-card'},
+          React.createElement('div',{className:'tl-time'},timeAgo(e.ts)+' · '+findName(e.by)),
+          React.createElement('div',{className:'tl-title'},e.action),
+          e.detail&&React.createElement('div',{className:'tl-sub'},e.detail)
+        )
+      ))
+    )
+  );
+}
+
+function WhatsAppTab({event,friends,expenses,txns,settled,findName}){
+  const pending=txns.filter(t=>!settled.find(s=>s.from===t.from&&s.to===t.to));
+  return React.createElement('div',{className:'section'},
+    React.createElement('div',{className:'wa-section'},
+      React.createElement('div',{className:'wa-section-title'},'📊 Group Messages'),
+      React.createElement('button',{className:'wa-btn',onClick:()=>openWA(buildSummaryMsg(event,friends,expenses,txns,settled))},
+        React.createElement('span',{className:'wa-icon'},'📲'),'Send Full Summary')
+      ,React.createElement('button',{className:'wa-btn',onClick:()=>{const s=pending.length?`${pending.length} settlements pending`:'All settled!';const m=`🔥 ${event.name} — ${s}\n${pending.map(t=>`${findName(t.from)} → ${findName(t.to)}: ${fmt(t.amount)}`).join('\n')}\n_BBQ Split_`;openWA(m);}},
+        React.createElement('span',{className:'wa-icon'},'📲'),'Quick Update')
+    ),
+    pending.length>0&&React.createElement('div',{className:'wa-section'},
+      React.createElement('div',{className:'wa-section-title'},'🔔 Reminders'),
+      [...new Set(pending.map(t=>t.from))].map(fromId=>{
+        const owings=pending.filter(t=>t.from===fromId);
+        const fi=friends.findIndex(f=>f.id===fromId);
+        return React.createElement('div',{key:fromId,style:{display:'flex',alignItems:'center',gap:8,marginBottom:7}},
+          React.createElement(Av,{name:findName(fromId),idx:fi<0?0:fi}),
+          React.createElement('div',{style:{flex:1}},
+            React.createElement('div',{style:{fontSize:13,fontWeight:500}},findName(fromId)),
+            React.createElement('div',{style:{fontSize:11,color:'var(--text3)'}},owings.map(o=>'→ '+findName(o.to)+' '+fmt(o.amount)).join(' · '))
+          ),
+          React.createElement('button',{className:'wa-btn',style:{width:'auto',padding:'7px 12px',flexShrink:0},onClick:()=>{const m=buildReminderMsg(event,friends,txns,settled,fromId);if(m)openWA(m);}},
+            React.createElement('span',{className:'wa-icon'},'📲'),'Remind')
+        );
+      })
+    )
+  );
+}
+
+function AddFriendModal({onAdd,onClose}){
+  const [name,setName]=useState('');
+  const ref=useRef();
+  useEffect(()=>ref.current?.focus(),[]);
+  return React.createElement('div',{className:'overlay',onClick:e=>e.target===e.currentTarget&&onClose()},
+    React.createElement('div',{className:'modal'},
+      React.createElement('div',{className:'modal-hdr'},
+        React.createElement('span',{className:'modal-title'},'👤 Add Member'),
+        React.createElement('button',{className:'modal-close',onClick:onClose},'×')
+      ),
+      React.createElement('div',{className:'field'},
+        React.createElement('label',{className:'field-label'},'Name'),
+        React.createElement('input',{ref,className:'inp',value:name,onChange:e=>setName(e.target.value),placeholder:'Enter name',onKeyDown:e=>e.key==='Enter'&&name.trim()&&(onAdd(name),onClose())})
+      ),
+      React.createElement('button',{className:'btn btn-primary btn-full',onClick:()=>{if(name.trim()){onAdd(name);onClose()}}},'Add to Crew')
+    )
+  );
+}
+
+function AddExpenseModal({friends,myId,onAdd,onClose}){
+  const [desc,setDesc]=useState('');
+  const [amt,setAmt]=useState('');
+  const [cat,setCat]=useState('food');
+  const [paidBy,setPaidBy]=useState(myId||friends[0]?.id||'');
+  const [splitWith,setSplitWith]=useState(friends.map(f=>f.id));
+
+  function toggle(id){setSplitWith(p=>p.includes(id)?p.filter(x=>x!==id):[...p,id])}
+
+  function submit(){if(!desc.trim()||!amt)return;onAdd({description:desc.trim(),amount:Number(amt),paidBy:[{id:paidBy,amount:Number(amt)}],splitWith,category:cat});onClose();}
+
+  const share=splitWith.length&&Number(amt)?Number(amt)/splitWith.length:0;
+
+  return React.createElement('div',{className:'overlay',onClick:e=>e.target===e.currentTarget&&onClose()},
+    React.createElement('div',{className:'modal'},
+      React.createElement('div',{className:'modal-hdr'},
+        React.createElement('span',{className:'modal-title'},'💸 Add Expense'),
+        React.createElement('button',{className:'modal-close',onClick:onClose},'×')
+      ),
+      React.createElement('div',{className:'field'},
+        React.createElement('label',{className:'field-label'},'Description'),
+        React.createElement('input',{className:'inp',value:desc,onChange:e=>setDesc(e.target.value),placeholder:'e.g. Chicken Biryani...'})
+      ),
+      React.createElement('div',{className:'field'},
+        React.createElement('label',{className:'field-label'},'Amount (₹)'),
+        React.createElement('input',{className:'inp',type:'number',value:amt,onChange:e=>setAmt(e.target.value),placeholder:'0',min:'0'})
+      ),
+      React.createElement('div',{className:'field'},
+        React.createElement('label',{className:'field-label'},'Category'),
+        React.createElement('div',{style:{display:'flex',flexWrap:'wrap',gap:6}},
+          CATS.map(c=>React.createElement('button',{key:c.id,className:'btn btn-xs '+(cat===c.id?'btn-primary':'btn-ghost'),onClick:()=>setCat(c.id)},c.icon+' '+c.label))
+        )
+      ),
+      React.createElement('div',{className:'field'},
+        React.createElement('label',{className:'field-label'},'Paid By'),
+        React.createElement('select',{className:'inp',value:paidBy,onChange:e=>setPaidBy(e.target.value)},
+          friends.map(f=>React.createElement('option',{key:f.id,value:f.id},f.name))
+        )
+      ),
+      React.createElement('div',{className:'field'},
+        React.createElement('label',{className:'field-label'},'Split With'),
+        friends.map(f=>React.createElement('label',{key:f.id,className:'checkbox-row'},
+          React.createElement('input',{type:'checkbox',checked:splitWith.includes(f.id),onChange:()=>toggle(f.id)}),
+          f.name
+        )),
+        share>0&&React.createElement('div',{className:'split-preview'},'→ '+fmt(share)+' per person')
+      ),
+      React.createElement('button',{className:'btn btn-primary btn-full',onClick:submit},'+ Add Expense')
+    )
+  );
+}
+
+function EditExpenseModal({expense,friends,onSave,onClose}){
+  const [desc,setDesc]=useState(expense.description);
+  const [amt,setAmt]=useState(expense.amount);
+  const [cat,setCat]=useState(expense.category||'food');
+  const [paidBy,setPaidBy]=useState(Array.isArray(expense.paidBy)?expense.paidBy[0]?.id:expense.paidBy);
+  const [splitWith,setSplitWith]=useState(expense.splitWith||friends.map(f=>f.id));
+  function toggle(id){setSplitWith(p=>p.includes(id)?p.filter(x=>x!==id):[...p,id])}
+  return React.createElement('div',{className:'overlay',onClick:e=>e.target===e.currentTarget&&onClose()},
+    React.createElement('div',{className:'modal'},
+      React.createElement('div',{className:'modal-hdr'},
+        React.createElement('span',{className:'modal-title'},'✏️ Edit Expense'),
+        React.createElement('button',{className:'modal-close',onClick:onClose},'×')
+      ),
+      React.createElement('div',{className:'field'},React.createElement('label',{className:'field-label'},'Description'),React.createElement('input',{className:'inp',value:desc,onChange:e=>setDesc(e.target.value)})),
+      React.createElement('div',{className:'field'},React.createElement('label',{className:'field-label'},'Amount (₹)'),React.createElement('input',{className:'inp',type:'number',value:amt,onChange:e=>setAmt(e.target.value)})),
+      React.createElement('div',{className:'field'},
+        React.createElement('label',{className:'field-label'},'Category'),
+        React.createElement('div',{style:{display:'flex',flexWrap:'wrap',gap:5}},
+          CATS.map(c=>React.createElement('button',{key:c.id,className:'btn btn-xs '+(cat===c.id?'btn-primary':'btn-ghost'),onClick:()=>setCat(c.id)},c.icon+' '+c.label))
+        )
+      ),
+      React.createElement('div',{className:'field'},React.createElement('label',{className:'field-label'},'Paid By'),React.createElement('select',{className:'inp',value:paidBy,onChange:e=>setPaidBy(e.target.value)},friends.map(f=>React.createElement('option',{key:f.id,value:f.id},f.name)))),
+      React.createElement('div',{className:'field'},
+        React.createElement('label',{className:'field-label'},'Split With'),
+        friends.map(f=>React.createElement('label',{key:f.id,className:'checkbox-row'},React.createElement('input',{type:'checkbox',checked:splitWith.includes(f.id),onChange:()=>toggle(f.id)}),f.name))
+      ),
+      React.createElement('button',{className:'btn btn-primary btn-full',onClick:()=>onSave(expense.id,{description:desc,amount:Number(amt),paidBy:[{id:paidBy,amount:Number(amt)}],splitWith,category:cat})},'Save Changes')
+    )
+  );
+}
+
+function EditEventModal({event,onSave,onClose}){
+  const [name,setName]=useState(event?.name||'');
+  const [date,setDate]=useState(event?.date||'');
+  return React.createElement('div',{className:'overlay',onClick:e=>e.target===e.currentTarget&&onClose()},
+    React.createElement('div',{className:'modal'},
+      React.createElement('div',{className:'modal-hdr'},React.createElement('span',{className:'modal-title'},'🎉 Edit Event'),React.createElement('button',{className:'modal-close',onClick:onClose},'×')),
+      React.createElement('div',{className:'field'},React.createElement('label',{className:'field-label'},'Event Name'),React.createElement('input',{className:'inp',value:name,onChange:e=>setName(e.target.value)})),
+      React.createElement('div',{className:'field'},React.createElement('label',{className:'field-label'},'Date'),React.createElement('input',{className:'inp',type:'date',value:date,onChange:e=>setDate(e.target.value)})),
+      React.createElement('button',{className:'btn btn-primary btn-full',onClick:()=>onSave({...event,name,date})},'Save')
+    )
+  );
+}
+
+function PendingModal({pendingEdits,expenses,friends,approvePending,rejectPending,findName,onClose}){
+  return React.createElement('div',{className:'overlay',onClick:e=>e.target===e.currentTarget&&onClose()},
+    React.createElement('div',{className:'modal'},
+      React.createElement('div',{className:'modal-hdr'},
+        React.createElement('span',{className:'modal-title'},'⏳ Pending Reviews'),
+        React.createElement('button',{className:'modal-close',onClick:onClose},'×')
+      ),
+      !pendingEdits.length&&React.createElement('div',{className:'empty'},React.createElement('div',{className:'empty-icon'},'✅'),React.createElement('div',null,'No pending requests')),
+      pendingEdits.map(p=>React.createElement('div',{key:p.id,className:'pending-item'},
+        React.createElement('div',{className:'pending-type'},p.type==='add'?'New Expense':'Edit Request'),
+        React.createElement('div',{className:'pending-desc'},p.data?.description||'Unknown'),
+        React.createElement('div',{className:'pending-sub'},
+          p.type==='add'
+            ?fmt(p.data?.amount||0)+' · Requested by '+findName(p.by)
+            :'Edit on: '+(expenses.find(e=>e.id===p.expenseId)||{description:'?'}).description+' · by '+findName(p.by)
+        ),
+        React.createElement('div',{style:{display:'flex',gap:7}},
+          React.createElement('button',{className:'btn btn-success btn-sm',onClick:()=>approvePending(p.id)},'✓ Approve'),
+          React.createElement('button',{className:'btn btn-danger btn-sm',onClick:()=>rejectPending(p.id)},'✕ Reject')
+        )
+      ))
+    )
+  );
+}
+
+function RoomInfoModal({roomCode,event,friends,myId,showToast,onClose}){
+  const link=window.location.origin+window.location.pathname+'?room='+roomCode;
+  function copy(){navigator.clipboard?.writeText(link).then(()=>showToast('Link copied!','ok')).catch(()=>showToast('Copy: '+link));}
+  return React.createElement('div',{className:'overlay',onClick:e=>e.target===e.currentTarget&&onClose()},
+    React.createElement('div',{className:'modal'},
+      React.createElement('div',{className:'modal-hdr'},
+        React.createElement('span',{className:'modal-title'},'🔗 Room Info'),
+        React.createElement('button',{className:'modal-close',onClick:onClose},'×')
+      ),
+      React.createElement('div',{style:{textAlign:'center',padding:'10px 0 16px'}},
+        React.createElement('div',{style:{fontSize:13,color:'var(--text3)',marginBottom:6}},'Room Code'),
+        React.createElement('div',{style:{fontFamily:'\'Syne\',sans-serif',fontSize:36,fontWeight:800,color:'var(--ember)',letterSpacing:4}},roomCode),
+        React.createElement('div',{style:{fontSize:12,color:'var(--text3)',marginTop:4}},'Share this code with friends to join')
+      ),
+      React.createElement('div',{style:{background:'var(--bg3)',borderRadius:'var(--r-sm)',padding:'10px 12px',fontSize:12,color:'var(--text3)',wordBreak:'break-all',marginBottom:12}},link),
+      React.createElement('div',{style:{display:'flex',gap:8}},
+        React.createElement('button',{className:'btn btn-primary',style:{flex:1},onClick:copy},'📋 Copy Link'),
+        React.createElement('button',{className:'wa-btn',style:{flex:1},onClick:()=>openWA(`Hey! Join our BBQ expense tracker 🔥\n\nEvent: ${event?.name}\nRoom Code: *${roomCode}*\nJoin link: ${link}`)},React.createElement('span',{className:'wa-icon'},'📲'),'Share on WhatsApp')
+      )
+    )
+  );
+}
+
+const root=ReactDOM.createRoot(document.getElementById('root'));
+root.render(React.createElement(App));
+</script>
+</body>
+</html>
